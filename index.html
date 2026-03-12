@@ -19,6 +19,9 @@
       --danger: #dc2626;
       --success: #16a34a;
       --warning: #d97706;
+      --sidebar-width: 88px;
+      --sidebar-gap: 28px;
+      --mobile-sidebar-space: 120px;
     }
 
     * { box-sizing: border-box; margin:0; padding:0; }
@@ -27,7 +30,7 @@
       background: linear-gradient(135deg, #f8fbff 0%, #eef4ff 100%);
       color: var(--dark);
       min-height: 100vh;
-      padding-right: 116px;
+      padding-right: calc(var(--sidebar-width) + var(--sidebar-gap));
     }
 
     .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
@@ -37,7 +40,7 @@
       right: 20px;
       top: 50%;
       transform: translateY(-50%);
-      width: 88px;
+      width: var(--sidebar-width);
       background: rgba(17,28,52,0.94);
       color: white;
       border-radius: 24px;
@@ -86,6 +89,7 @@
       background: rgba(139,92,246,0.42);
       transform: translateX(-2px);
       outline: none;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.22);
     }
 
     .icon {
@@ -359,7 +363,7 @@
     .section.active { display: block; }
 
     @media (max-width: 768px) {
-      body { padding-right: 0; padding-bottom: 120px; }
+      body { padding-right: 0; padding-bottom: var(--mobile-sidebar-space); }
       .floating-sidebar {
         left: 16px;
         right: 16px;
@@ -391,10 +395,10 @@
   <aside class="floating-sidebar" aria-label="Executive navigation">
     <div class="status-dot" aria-hidden="true"></div>
     <div class="label">Live ops</div>
-    <a class="side-link" href="#overview" data-tab-target="home"><span class="icon" aria-hidden="true">📊</span><span>Overview</span></a>
-    <a class="side-link" href="#portfolio" data-tab-target="home"><span class="icon" aria-hidden="true">🏠</span><span>Units</span></a>
-    <a class="side-link" href="#operations" data-tab-target="residents"><span class="icon" aria-hidden="true">🩺</span><span>Operations</span></a>
-    <a class="side-link" href="#funding" data-tab-target="funding"><span class="icon" aria-hidden="true">💙</span><span>Funding</span></a>
+    <a class="side-link" href="#overview" data-tab-target="home" data-scroll-target="overview" aria-label="Go to overview section"><span class="icon" aria-hidden="true">📊</span><span>Overview</span></a>
+    <a class="side-link" href="#portfolio" data-tab-target="home" data-scroll-target="portfolio" aria-label="Go to programme units section"><span class="icon" aria-hidden="true">🏠</span><span>Units</span></a>
+    <a class="side-link" href="#operations" data-tab-target="operations" data-scroll-target="operations" aria-label="Go to operations section"><span class="icon" aria-hidden="true">🩺</span><span>Operations</span></a>
+    <a class="side-link" href="#funding" data-tab-target="funding" data-scroll-target="funding" aria-label="Go to funding section"><span class="icon" aria-hidden="true">💙</span><span>Funding</span></a>
   </aside>
 
   <div class="container">
@@ -402,11 +406,13 @@
     <header>
       <div>
         <h1>Bophelong Executive Overview</h1>
-        <div class="subtitle">Old Age Home • Children's Home • Mental Disability Home • BIS School</div>
+        <div class="subtitle">
+          <span>Old Age Home</span> • <span>Children's Home</span> • <span>Intellectual Disability Home</span> • <span>BIS School</span>
+        </div>
       </div>
       <div style="text-align:right;">
         <div style="font-size:0.9rem; color:var(--muted);">March 2026</div>
-        <div style="font-size:0.95rem; color:#16a34a; font-weight:600;">All systems synced • Executive watch active</div>
+        <div style="font-size:0.95rem; color:var(--success); font-weight:600;">All systems synced • Executive watch active</div>
       </div>
     </header>
 
@@ -428,7 +434,7 @@
       </div>
 
       <div class="stat-card">
-        <h3>Mental Disability Home</h3>
+        <h3>Intellectual Disability Home</h3>
         <div class="value">61</div>
         <div class="change">Daily care plans • 4 flagged follow-ups</div>
       </div>
@@ -444,7 +450,7 @@
       <div>
         <h2>Integrated programme intelligence</h2>
         <p style="color:var(--muted); line-height:1.6;">
-          The executive view now mirrors the core modules used across the homes and BIS School: residents or learners, health, staffing, tasks, inventory, finance, and donor activity.
+          The executive view now mirrors the core modules used across the homes and the BIS School: residents or learners, health, staffing, tasks, inventory, finance, and donor activity.
         </p>
       </div>
       <div class="intelligence-metric">
@@ -462,14 +468,14 @@
     </section>
 
     <div class="quick-actions">
-      <button class="action-btn" data-tab-target="funding" data-scroll-target="funding"><span class="icon" aria-hidden="true">＋</span> Log Donation</button>
-      <button class="action-btn" data-tab-target="residents" data-scroll-target="operations"><span class="icon" aria-hidden="true">⚑</span> Review Operational Risks</button>
-      <button class="action-btn" data-tab-target="home" data-scroll-target="portfolio"><span class="icon" aria-hidden="true">⇪</span> Open Executive Summary</button>
+      <button class="action-btn" data-tab-target="funding" data-scroll-target="funding"><span class="icon" aria-hidden="true">💙</span> Log Donation</button>
+      <button class="action-btn" data-tab-target="operations" data-scroll-target="operations"><span class="icon" aria-hidden="true">⚠️</span> Review Operational Risks</button>
+      <button class="action-btn" data-tab-target="home" data-scroll-target="portfolio"><span class="icon" aria-hidden="true">📋</span> Open Executive Summary</button>
     </div>
 
     <nav class="tabs">
       <button class="active" data-section="home">Home</button>
-      <button data-section="residents">Operations</button>
+      <button data-section="operations">Operations</button>
       <button data-section="funding">Funding & CSI</button>
     </nav>
 
@@ -523,7 +529,7 @@
           <div class="mini-stat"><span>Occupancy</span><strong>98%</strong></div>
         </article>
         <article class="facility-card">
-          <h3>Mental Disability Home</h3>
+          <h3>Intellectual Disability Home</h3>
           <ul>
             <li>Care plans, wellness notes, and support staffing are grouped into a clearer operational watchlist.</li>
             <li>Therapy sessions and safeguarding actions can be reviewed with the rest of the organisation.</li>
@@ -543,7 +549,7 @@
       </div>
     </section>
 
-    <section class="section" data-section-panel="residents">
+    <section class="section" data-section-panel="operations">
       <div class="section-heading" id="operations">
         <h2>Operational watchlist</h2>
         <p style="color:var(--muted);">A more intelligent executive screen for the daily issues that need quick escalation across care, education, and administration.</p>
@@ -555,7 +561,7 @@
           <ul>
             <li>2 frail-care residents waiting on doctor sign-off.</li>
             <li>1 child scheduled for an urgent therapy reassessment.</li>
-            <li>1 mental disability support plan requires family follow-up.</li>
+            <li>1 intellectual disability support plan requires family follow-up.</li>
           </ul>
         </article>
         <article class="watch-card">
@@ -654,15 +660,16 @@
         const sectionName = trigger.dataset.tabTarget;
         if (sectionName) activateSection(sectionName);
 
-        const scrollTarget = trigger.dataset.scrollTarget || (trigger.getAttribute('href') || '').replace('#', '');
+        const scrollTarget = trigger.dataset.scrollTarget;
         if (!scrollTarget) return;
 
         const targetElement = document.getElementById(scrollTarget);
         if (targetElement) {
           event.preventDefault();
-          window.setTimeout(() => {
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 60);
+          window.requestAnimationFrame(() => {
+            const scrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+            targetElement.scrollIntoView({ behavior: scrollBehavior, block: 'start' });
+          });
         }
       });
     });
