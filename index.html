@@ -167,7 +167,7 @@
             <!-- TOP BAR -->
             <header class="h-16 bg-zinc-900 border-b border-zinc-800 px-8 flex items-center justify-between z-50">
                 <div class="flex items-center gap-4">
-                    <div class="text-xl font-semibold tracking-tight">Bophelong Unified Command Center</div>
+                    <h1 class="text-xl font-semibold tracking-tight">Bophelong Unified Command Center</h1>
                     <div class="px-3 py-1 bg-yellow-400/10 text-yellow-400 text-xs font-mono rounded-3xl flex items-center gap-1">
                         <i class="fa-solid fa-satellite"></i>
                         <span>REAL-TIME SYNC</span>
@@ -267,7 +267,7 @@
                         <!-- CHARTS -->
                         <div class="col-span-8 bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
                             <div class="flex justify-between mb-6">
-                                <h1 id="dashboard-title" class="font-semibold text-xl">Organization Performance • Last 90 Days</h1>
+                                <h2 id="dashboard-title" class="font-semibold text-xl">Organization Performance • Last 90 Days</h2>
                                 <select id="chart-filter" class="bg-zinc-800 text-sm px-4 rounded-2xl border border-zinc-700 focus:outline-none">
                                     <option>All Facilities</option>
                                     <option>Donations</option>
@@ -546,13 +546,17 @@
     <script>
         // Tailwind script run
         function initializeTailwind() {
-            if (!window.tailwind) return;
+            if (!window.tailwind) {
+                console.warn('Tailwind CDN is unavailable; rendering with fallback browser styles.');
+                return false;
+            }
             tailwind.config = {
                 content: [],
                 theme: {
                     extend: {}
                 }
             }
+            return true;
         }
 
         function getChartCanvas(id, fallbackMessage) {
