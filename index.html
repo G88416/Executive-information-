@@ -126,6 +126,56 @@
 
     .alert strong { color: #b45309; }
 
+    .firebase-status {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      background: rgba(15,23,42,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .connection-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 98px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+      background: rgba(217,119,6,0.14);
+      color: var(--warning);
+    }
+
+    .connection-pill.live {
+      background: rgba(22,163,74,0.12);
+      color: var(--success);
+    }
+
+    .connection-pill.error {
+      background: rgba(220,38,38,0.12);
+      color: var(--danger);
+    }
+
+    .firebase-status p {
+      margin-top: 4px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .firebase-status code {
+      background: rgba(148,163,184,0.14);
+      border-radius: 8px;
+      padding: 2px 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85em;
+    }
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -411,38 +461,46 @@
         </div>
       </div>
       <div style="text-align:right;">
-        <div style="font-size:0.9rem; color:var(--muted);">March 2026</div>
-        <div style="font-size:0.95rem; color:var(--success); font-weight:600;">All systems synced • Executive watch active</div>
+        <div style="font-size:0.9rem; color:var(--muted);" data-bind="meta.reportingMonth">March 2026</div>
+        <div style="font-size:0.95rem; color:var(--success); font-weight:600;" data-bind="meta.syncStatus">All systems synced • Executive watch active</div>
       </div>
     </header>
 
     <div class="alert">
-      <strong>Today's Priorities:</strong> 3 children need therapy review • 5 medication rounds overdue at the old age home • BIS fees R18,400 overdue • New donor pledge received R45,000
+      <strong>Today's Priorities:</strong> <span data-bind="meta.prioritiesSummary">3 children need therapy review • 5 medication rounds overdue at the old age home • BIS fees R18,400 overdue • New donor pledge received R45,000</span>
+    </div>
+
+    <div class="firebase-status" id="firebase-status" role="status" aria-live="polite">
+      <span class="connection-pill" id="firebase-connection-pill">Demo mode</span>
+      <div>
+        <strong id="firebase-status-title">Firebase live feed ready</strong>
+        <p id="firebase-status-text">Set <code>window.EXECUTIVE_FIREBASE_CONFIG</code> and publish dashboard data to <code>executiveDashboard</code> in Firebase Realtime Database to stream live updates into this screen.</p>
+      </div>
     </div>
 
     <div class="stats-grid" id="overview">
       <div class="stat-card">
         <h3>Children's Home</h3>
-        <div class="value">87</div>
-        <div class="change positive">Medical + social work monitored • 95% occupancy</div>
+        <div class="value" data-bind="stats.childrensHome.value">87</div>
+        <div class="change positive" data-bind="stats.childrensHome.change">Medical + social work monitored • 95% occupancy</div>
       </div>
 
       <div class="stat-card">
         <h3>Old Age Home</h3>
-        <div class="value">142</div>
-        <div class="change positive">Medication & visitation monitored • 98% occupancy</div>
+        <div class="value" data-bind="stats.oldAgeHome.value">142</div>
+        <div class="change positive" data-bind="stats.oldAgeHome.change">Medication & visitation monitored • 98% occupancy</div>
       </div>
 
       <div class="stat-card">
         <h3>Intellectual Disability Home</h3>
-        <div class="value">61</div>
-        <div class="change">Daily care plans • 4 flagged follow-ups</div>
+        <div class="value" data-bind="stats.disabilityHome.value">61</div>
+        <div class="change" data-bind="stats.disabilityHome.change">Daily care plans • 4 flagged follow-ups</div>
       </div>
 
       <div class="stat-card">
         <h3>BIS School</h3>
-        <div class="value">231</div>
-        <div class="change">Attendance, grades & fee collection live</div>
+        <div class="value" data-bind="stats.bisSchool.value">231</div>
+        <div class="change" data-bind="stats.bisSchool.change">Attendance, grades & fee collection live</div>
       </div>
     </div>
 
@@ -454,15 +512,15 @@
         </p>
       </div>
       <div class="intelligence-metric">
-        <strong>521</strong>
+        <strong data-bind="intelligence.peopleServed">521</strong>
         <span>People served across all units</span>
       </div>
       <div class="intelligence-metric">
-        <strong>84%</strong>
+        <strong data-bind="intelligence.tasksResolvedOnTime">84%</strong>
         <span>Open tasks resolved on time</span>
       </div>
       <div class="intelligence-metric">
-        <strong>R126k</strong>
+        <strong data-bind="intelligence.revenueFollowUp">R126k</strong>
         <span>Revenue and fee follow-up required</span>
       </div>
     </section>
@@ -487,21 +545,21 @@
       <div class="smart-grid">
         <article class="dashboard-card">
           <div class="pill success"><span class="icon" aria-hidden="true">👥</span> Staffing</div>
-          <h3>92 staff on duty</h3>
+          <h3 data-bind="monitoring.staffing.title">92 staff on duty</h3>
           <p style="color:var(--muted); line-height:1.6;">Track carers, nurses, social workers, educators, and support staff from one place for smoother handovers.</p>
-          <div class="metric-row"><span>Coverage today</span><strong>96%</strong></div>
+          <div class="metric-row"><span>Coverage today</span><strong data-bind="monitoring.staffing.coverage">96%</strong></div>
         </article>
         <article class="dashboard-card">
           <div class="pill warning"><span class="icon" aria-hidden="true">🧾</span> Care follow-up</div>
-          <h3>12 cases need review</h3>
+          <h3 data-bind="monitoring.careFollowUp.title">12 cases need review</h3>
           <p style="color:var(--muted); line-height:1.6;">Combines medical records, therapy schedules, visit logs, and resident wellness follow-ups into a single queue.</p>
-          <div class="metric-row"><span>Critical now</span><strong>4</strong></div>
+          <div class="metric-row"><span>Critical now</span><strong data-bind="monitoring.careFollowUp.criticalNow">4</strong></div>
         </article>
         <article class="dashboard-card">
           <div class="pill danger"><span class="icon" aria-hidden="true">📦</span> Inventory & supply</div>
-          <h3>7 low-stock items</h3>
+          <h3 data-bind="monitoring.inventory.title">7 low-stock items</h3>
           <p style="color:var(--muted); line-height:1.6;">Highlights food, medication, school essentials, and care consumables before they impact service delivery.</p>
-          <div class="metric-row"><span>Units affected</span><strong>3</strong></div>
+          <div class="metric-row"><span>Units affected</span><strong data-bind="monitoring.inventory.unitsAffected">3</strong></div>
         </article>
       </div>
 
@@ -516,8 +574,8 @@
             <li>Children, adoptions, events, inventory, and donor activity aligned for daily visibility.</li>
             <li>School readiness, medical reviews, and social work interventions grouped under one unit scorecard.</li>
           </ul>
-          <div class="mini-stat"><span>Priority cases</span><strong>3 therapy reviews</strong></div>
-          <div class="mini-stat"><span>Occupancy</span><strong>95%</strong></div>
+          <div class="mini-stat"><span>Priority cases</span><strong data-bind="portfolio.childrensHome.priorityCases">3 therapy reviews</strong></div>
+          <div class="mini-stat"><span>Occupancy</span><strong data-bind="portfolio.childrensHome.occupancy">95%</strong></div>
         </article>
         <article class="facility-card">
           <h3>Old Age Home</h3>
@@ -525,8 +583,8 @@
             <li>Resident wellbeing, medication rounds, visitations, and staff tasks surfaced for leadership escalation.</li>
             <li>Expense and inspection readiness stay visible alongside activity participation.</li>
           </ul>
-          <div class="mini-stat"><span>Medication exceptions</span><strong>5 overdue rounds</strong></div>
-          <div class="mini-stat"><span>Occupancy</span><strong>98%</strong></div>
+          <div class="mini-stat"><span>Medication exceptions</span><strong data-bind="portfolio.oldAgeHome.medicationExceptions">5 overdue rounds</strong></div>
+          <div class="mini-stat"><span>Occupancy</span><strong data-bind="portfolio.oldAgeHome.occupancy">98%</strong></div>
         </article>
         <article class="facility-card">
           <h3>Intellectual Disability Home</h3>
@@ -534,8 +592,8 @@
             <li>Care plans, wellness notes, and support staffing are grouped into a clearer operational watchlist.</li>
             <li>Therapy sessions and safeguarding actions can be reviewed with the rest of the organisation.</li>
           </ul>
-          <div class="mini-stat"><span>Flagged support plans</span><strong>4</strong></div>
-          <div class="mini-stat"><span>Support coverage</span><strong>91%</strong></div>
+          <div class="mini-stat"><span>Flagged support plans</span><strong data-bind="portfolio.disabilityHome.flaggedSupportPlans">4</strong></div>
+          <div class="mini-stat"><span>Support coverage</span><strong data-bind="portfolio.disabilityHome.supportCoverage">91%</strong></div>
         </article>
         <article class="facility-card">
           <h3>BIS School</h3>
@@ -543,8 +601,8 @@
             <li>Attendance, learner performance, teachers, and fees translate into executive early-warning signals.</li>
             <li>Academic delivery sits beside finance so management can act before arrears or absenteeism grows.</li>
           </ul>
-          <div class="mini-stat"><span>Attendance</span><strong>94%</strong></div>
-          <div class="mini-stat"><span>Fees overdue</span><strong>R18,400</strong></div>
+          <div class="mini-stat"><span>Attendance</span><strong data-bind="portfolio.bisSchool.attendance">94%</strong></div>
+          <div class="mini-stat"><span>Fees overdue</span><strong data-bind="portfolio.bisSchool.feesOverdue">R18,400</strong></div>
         </article>
       </div>
     </section>
@@ -558,7 +616,7 @@
         <article class="watch-card">
           <div class="pill danger"><span class="icon" aria-hidden="true">🔔</span> Escalate now</div>
           <h3>Health and care alerts</h3>
-          <ul>
+          <ul data-bind-list="operations.healthAlerts">
             <li>2 frail-care residents waiting on doctor sign-off.</li>
             <li>1 child scheduled for an urgent therapy reassessment.</li>
             <li>1 intellectual disability support plan requires family follow-up.</li>
@@ -567,7 +625,7 @@
         <article class="watch-card">
           <div class="pill warning"><span class="icon" aria-hidden="true">🗂️</span> Workflow risk</div>
           <h3>Task and compliance queue</h3>
-          <ul>
+          <ul data-bind-list="operations.workflowRisk">
             <li>9 operational tasks are overdue across nursing, maintenance, and school admin.</li>
             <li>2 inspection files need updated evidence before month end.</li>
             <li>Inventory reorder cycle has slipped at 3 units.</li>
@@ -576,7 +634,7 @@
         <article class="watch-card">
           <div class="pill success"><span class="icon" aria-hidden="true">✅</span> Service coverage</div>
           <h3>People and programme capacity</h3>
-          <ul>
+          <ul data-bind-list="operations.serviceCoverage">
             <li>Teacher-to-learner ratio remains within target at BIS.</li>
             <li>Weekend staffing roster is fully assigned for all homes.</li>
             <li>Volunteer visits recovered after two new partners were onboarded.</li>
@@ -590,24 +648,24 @@
         <h2>Funding & CSI – YTD 2026</h2>
         <div class="funding-grid">
           <div>
-            <div class="big">R2.85M</div>
+            <div class="big" data-bind="funding.summary.totalReceived">R2.85M</div>
             <div style="color:var(--muted); font-size:0.9rem;">Total Received</div>
           </div>
           <div>
-            <div class="big" style="color:#10b981;">+R184k</div>
+            <div class="big" style="color:#10b981;" data-bind="funding.summary.thisMonth">+R184k</div>
             <div style="color:var(--muted); font-size:0.9rem;">This Month</div>
           </div>
           <div>
-            <div class="big" style="color:#d97706;">92%</div>
+            <div class="big" style="color:#d97706;" data-bind="funding.summary.gapCovered">92%</div>
             <div style="color:var(--muted); font-size:0.9rem;">Gap Covered</div>
           </div>
           <div>
-            <div class="big" style="color:var(--purple);">97%</div>
+            <div class="big" style="color:var(--purple);" data-bind="funding.summary.compliance">97%</div>
             <div style="color:var(--muted); font-size:0.9rem;">Compliance</div>
           </div>
         </div>
         <div style="margin-top:20px; color:var(--muted);">
-          Recent: Nashua Children's Charity • Spur Foundation • Gift of the Givers
+          Recent: <span data-bind="funding.recentPartners">Nashua Children's Charity • Spur Foundation • Gift of the Givers</span>
         </div>
       </div>
       <div class="section-heading">
@@ -617,30 +675,109 @@
       <div class="resource-grid">
         <article class="dashboard-card">
           <h3>Donor momentum</h3>
-          <div class="mini-stat"><span>Active CSI partners</span><strong>14</strong></div>
-          <div class="mini-stat"><span>New pledge</span><strong>R45,000</strong></div>
-          <div class="mini-stat"><span>Renewals due</span><strong>3 this quarter</strong></div>
+          <div class="mini-stat"><span>Active CSI partners</span><strong data-bind="funding.signals.donorMomentum.activePartners">14</strong></div>
+          <div class="mini-stat"><span>New pledge</span><strong data-bind="funding.signals.donorMomentum.newPledge">R45,000</strong></div>
+          <div class="mini-stat"><span>Renewals due</span><strong data-bind="funding.signals.donorMomentum.renewalsDue">3 this quarter</strong></div>
         </article>
         <article class="dashboard-card">
           <h3>School fees</h3>
-          <div class="mini-stat"><span>Collected this month</span><strong>R126,800</strong></div>
-          <div class="mini-stat"><span>Outstanding</span><strong>R18,400</strong></div>
-          <div class="mini-stat"><span>Accounts at risk</span><strong>8</strong></div>
+          <div class="mini-stat"><span>Collected this month</span><strong data-bind="funding.signals.schoolFees.collectedThisMonth">R126,800</strong></div>
+          <div class="mini-stat"><span>Outstanding</span><strong data-bind="funding.signals.schoolFees.outstanding">R18,400</strong></div>
+          <div class="mini-stat"><span>Accounts at risk</span><strong data-bind="funding.signals.schoolFees.accountsAtRisk">8</strong></div>
         </article>
         <article class="dashboard-card">
           <h3>Operational spend</h3>
-          <div class="mini-stat"><span>Medical and care</span><strong>41%</strong></div>
-          <div class="mini-stat"><span>Food and supplies</span><strong>27%</strong></div>
-          <div class="mini-stat"><span>Education and transport</span><strong>18%</strong></div>
+          <div class="mini-stat"><span>Medical and care</span><strong data-bind="funding.signals.operationalSpend.medicalAndCare">41%</strong></div>
+          <div class="mini-stat"><span>Food and supplies</span><strong data-bind="funding.signals.operationalSpend.foodAndSupplies">27%</strong></div>
+          <div class="mini-stat"><span>Education and transport</span><strong data-bind="funding.signals.operationalSpend.educationAndTransport">18%</strong></div>
         </article>
       </div>
     </section>
 
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script>
     const tabButtons = document.querySelectorAll('nav.tabs button');
     const panels = document.querySelectorAll('[data-section-panel]');
+    const firebaseConnectionPill = document.getElementById('firebase-connection-pill');
+    const firebaseStatusTitle = document.getElementById('firebase-status-title');
+    const firebaseStatusText = document.getElementById('firebase-status-text');
+    const defaultDashboardData = {
+      meta: {
+        reportingMonth: 'March 2026',
+        syncStatus: 'Demo data loaded • add Firebase config for live sync',
+        prioritiesSummary: "3 children need therapy review • 5 medication rounds overdue at the old age home • BIS fees R18,400 overdue • New donor pledge received R45,000"
+      },
+      stats: {
+        childrensHome: { value: 87, change: 'Medical + social work monitored • 95% occupancy' },
+        oldAgeHome: { value: 142, change: 'Medication & visitation monitored • 98% occupancy' },
+        disabilityHome: { value: 61, change: 'Daily care plans • 4 flagged follow-ups' },
+        bisSchool: { value: 231, change: 'Attendance, grades & fee collection live' }
+      },
+      intelligence: {
+        peopleServed: 521,
+        tasksResolvedOnTime: '84%',
+        revenueFollowUp: 'R126k'
+      },
+      monitoring: {
+        staffing: { title: '92 staff on duty', coverage: '96%' },
+        careFollowUp: { title: '12 cases need review', criticalNow: 4 },
+        inventory: { title: '7 low-stock items', unitsAffected: 3 }
+      },
+      portfolio: {
+        childrensHome: { priorityCases: '3 therapy reviews', occupancy: '95%' },
+        oldAgeHome: { medicationExceptions: '5 overdue rounds', occupancy: '98%' },
+        disabilityHome: { flaggedSupportPlans: 4, supportCoverage: '91%' },
+        bisSchool: { attendance: '94%', feesOverdue: 'R18,400' }
+      },
+      operations: {
+        healthAlerts: [
+          '2 frail-care residents waiting on doctor sign-off.',
+          '1 child scheduled for an urgent therapy reassessment.',
+          '1 intellectual disability support plan requires family follow-up.'
+        ],
+        workflowRisk: [
+          '9 operational tasks are overdue across nursing, maintenance, and school admin.',
+          '2 inspection files need updated evidence before month end.',
+          'Inventory reorder cycle has slipped at 3 units.'
+        ],
+        serviceCoverage: [
+          'Teacher-to-learner ratio remains within target at BIS.',
+          'Weekend staffing roster is fully assigned for all homes.',
+          'Volunteer visits recovered after two new partners were onboarded.'
+        ]
+      },
+      funding: {
+        summary: {
+          totalReceived: 'R2.85M',
+          thisMonth: '+R184k',
+          gapCovered: '92%',
+          compliance: '97%'
+        },
+        recentPartners: "Nashua Children's Charity • Spur Foundation • Gift of the Givers",
+        signals: {
+          donorMomentum: {
+            activePartners: 14,
+            newPledge: 'R45,000',
+            renewalsDue: '3 this quarter'
+          },
+          schoolFees: {
+            collectedThisMonth: 'R126,800',
+            outstanding: 'R18,400',
+            accountsAtRisk: 8
+          },
+          operationalSpend: {
+            medicalAndCare: '41%',
+            foodAndSupplies: '27%',
+            educationAndTransport: '18%'
+          }
+        }
+      }
+    };
+    const firebaseConfig = window.EXECUTIVE_FIREBASE_CONFIG || null;
+    const firebasePath = window.EXECUTIVE_FIREBASE_PATH || 'executiveDashboard';
 
     function activateSection(sectionName) {
       tabButtons.forEach(button => {
@@ -673,6 +810,151 @@
         }
       });
     });
+
+    function getValue(source, path) {
+      return path.split('.').reduce((value, key) => (value === null || value === undefined ? undefined : value[key]), source);
+    }
+
+    function mergeDeep(base, updates) {
+      if (Array.isArray(base)) {
+        return Array.isArray(updates) ? updates : base;
+      }
+
+      if (base && typeof base === 'object') {
+        const nextValue = { ...base };
+        if (!updates || typeof updates !== 'object' || Array.isArray(updates)) {
+          return nextValue;
+        }
+
+        Object.keys(updates).forEach(key => {
+          nextValue[key] = key in base ? mergeDeep(base[key], updates[key]) : updates[key];
+        });
+
+        return nextValue;
+      }
+
+      return updates ?? base;
+    }
+
+    function renderDashboard(data) {
+      document.querySelectorAll('[data-bind]').forEach(element => {
+        const value = getValue(data, element.dataset.bind);
+        if (value !== undefined && value !== null) {
+          element.textContent = value;
+        }
+      });
+
+      document.querySelectorAll('[data-bind-list]').forEach(list => {
+        const items = getValue(data, list.dataset.bindList);
+        if (!Array.isArray(items)) return;
+
+        list.replaceChildren(
+          ...items.map(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            return li;
+          })
+        );
+      });
+    }
+
+    function updateFirebaseStatus(mode, title, messageParts) {
+      firebaseConnectionPill.textContent = mode === 'live' ? 'Live data' : mode === 'error' ? 'Setup needed' : 'Demo mode';
+      firebaseConnectionPill.classList.toggle('live', mode === 'live');
+      firebaseConnectionPill.classList.toggle('error', mode === 'error');
+      firebaseStatusTitle.textContent = title;
+
+      firebaseStatusText.replaceChildren(
+        ...messageParts.map(part => {
+          if (part && typeof part === 'object' && part.type === 'code') {
+            const code = document.createElement('code');
+            code.textContent = part.value;
+            return code;
+          }
+
+          return document.createTextNode(part);
+        })
+      );
+    }
+
+    function hasFirebaseConfig(config) {
+      const requiredKeys = ['apiKey', 'databaseURL', 'projectId', 'appId'];
+      return Boolean(
+        config &&
+        requiredKeys.every(key => typeof config[key] === 'string' && config[key].trim())
+      );
+    }
+
+    renderDashboard(defaultDashboardData);
+
+    if (!window.firebase || typeof window.firebase.initializeApp !== 'function') {
+      updateFirebaseStatus(
+        'error',
+        'Firebase SDK unavailable',
+        ['The Firebase scripts could not be loaded, so the dashboard is showing built-in fallback values.']
+      );
+    } else if (!hasFirebaseConfig(firebaseConfig)) {
+      updateFirebaseStatus(
+        'demo',
+        'Firebase configuration required',
+        ['Set ', { type: 'code', value: 'window.EXECUTIVE_FIREBASE_CONFIG' }, ' with your Firebase project credentials and write your live dashboard payload to ', { type: 'code', value: firebasePath }, ' in Firebase Realtime Database.']
+      );
+    } else {
+      try {
+        const app = window.firebase.apps.length ? window.firebase.app() : window.firebase.initializeApp(firebaseConfig);
+        const database = app.database();
+        const dashboardRef = database.ref(firebasePath);
+
+        updateFirebaseStatus(
+          'demo',
+          'Waiting for Firebase data',
+          ['Connected to Firebase. Publish your executive feed to ', { type: 'code', value: firebasePath }, ' and the dashboard will update automatically.']
+        );
+
+        dashboardRef.on(
+          'value',
+          snapshot => {
+            const livePayload = snapshot.val();
+
+            if (!livePayload) {
+              renderDashboard(defaultDashboardData);
+              updateFirebaseStatus(
+                'demo',
+                'Waiting for Firebase data',
+                ['Firebase is connected, but ', { type: 'code', value: firebasePath }, ' is empty. The dashboard is still showing fallback values.']
+              );
+              return;
+            }
+
+            const mergedPayload = mergeDeep(defaultDashboardData, livePayload);
+            if (!getValue(livePayload, 'meta.syncStatus')) {
+              mergedPayload.meta.syncStatus = 'Live Firebase sync active';
+            }
+
+            renderDashboard(mergedPayload);
+            updateFirebaseStatus(
+              'live',
+              'Live Firebase feed connected',
+              ['This dashboard is now streaming from ', { type: 'code', value: firebasePath }, ' in Firebase Realtime Database.']
+            );
+          },
+          error => {
+            renderDashboard(defaultDashboardData);
+            updateFirebaseStatus(
+              'error',
+              'Firebase sync failed',
+              ['The dashboard could not read ', { type: 'code', value: firebasePath }, ': ' + error.message]
+            );
+          }
+        );
+      } catch (error) {
+        updateFirebaseStatus(
+          'error',
+          'Firebase initialization failed',
+          ['Please verify ', { type: 'code', value: 'window.EXECUTIVE_FIREBASE_CONFIG' }, '. Error: ' + error.message]
+        );
+      }
+    }
   </script>
 </body>
 </html>
