@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bophelong Executive Overview</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     :root {
       --purple: #8b5cf6;
@@ -17,6 +16,9 @@
       --border: rgba(148,163,184,0.22);
       --radius: 20px;
       --shadow: 0 12px 32px rgba(15,23,42,0.08);
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #d97706;
     }
 
     * { box-sizing: border-box; margin:0; padding:0; }
@@ -25,9 +27,71 @@
       background: linear-gradient(135deg, #f8fbff 0%, #eef4ff 100%);
       color: var(--dark);
       min-height: 100vh;
+      padding-right: 116px;
     }
 
     .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+
+    .floating-sidebar {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 88px;
+      background: rgba(17,28,52,0.94);
+      color: white;
+      border-radius: 24px;
+      padding: 16px 12px;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.22);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .floating-sidebar .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 6px rgba(34,197,94,0.16);
+    }
+
+    .floating-sidebar .label {
+      font-size: 0.72rem;
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.3;
+    }
+
+    .side-link {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      text-decoration: none;
+      border-radius: 18px;
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .side-link:hover,
+    .side-link:focus-visible {
+      background: rgba(139,92,246,0.42);
+      transform: translateX(-2px);
+      outline: none;
+    }
+
+    .icon {
+      font-style: normal;
+      line-height: 1;
+    }
 
     header {
       background: var(--surface);
@@ -94,6 +158,45 @@
     .positive { color: #16a34a; }
     .negative { color: #dc2626; }
 
+    .intelligence-banner,
+    .dashboard-card,
+    .facility-card,
+    .watch-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .intelligence-banner {
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      display: grid;
+      grid-template-columns: minmax(220px, 1.2fr) repeat(3, minmax(130px, 1fr));
+      gap: 18px;
+      align-items: center;
+    }
+
+    .intelligence-banner h2,
+    .section-heading h2 {
+      color: var(--navy);
+      margin-bottom: 8px;
+      font-size: 1.3rem;
+    }
+
+    .intelligence-metric {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(148,163,184,0.08);
+      text-align: center;
+    }
+
+    .intelligence-metric strong {
+      display: block;
+      font-size: 1.5rem;
+      color: var(--navy);
+    }
+
     .funding-panel {
       background: linear-gradient(135deg, rgba(139,92,246,0.06), rgba(6,182,212,0.06));
       border-radius: var(--radius);
@@ -126,6 +229,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
+      margin-bottom: 28px;
     }
 
     .action-btn {
@@ -145,6 +249,88 @@
       opacity: 0.94;
       transform: translateY(-2px);
     }
+
+    .section-heading {
+      margin-bottom: 18px;
+    }
+
+    .smart-grid,
+    .facility-grid,
+    .watch-grid,
+    .resource-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .smart-grid,
+    .watch-grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      margin-bottom: 28px;
+    }
+
+    .resource-grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    .facility-grid {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .dashboard-card,
+    .facility-card,
+    .watch-card {
+      padding: 22px;
+    }
+
+    .dashboard-card h3,
+    .facility-card h3,
+    .watch-card h3 {
+      margin-bottom: 10px;
+      color: var(--navy);
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .pill.success { background: rgba(22,163,74,0.12); color: var(--success); }
+    .pill.warning { background: rgba(217,119,6,0.14); color: var(--warning); }
+    .pill.danger { background: rgba(220,38,38,0.12); color: var(--danger); }
+
+    .facility-card ul,
+    .watch-card ul {
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .mini-stat {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(148,163,184,0.18);
+      color: var(--muted);
+    }
+
+    .mini-stat:last-child { border-bottom: none; }
+
+    .mini-stat strong { color: var(--navy); }
 
     nav.tabs {
       display: flex;
@@ -173,112 +359,311 @@
     .section.active { display: block; }
 
     @media (max-width: 768px) {
+      body { padding-right: 0; padding-bottom: 120px; }
+      .floating-sidebar {
+        left: 16px;
+        right: 16px;
+        top: auto;
+        bottom: 16px;
+        transform: none;
+        width: auto;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 14px;
+        overflow-x: auto;
+      }
+      .floating-sidebar .label { min-width: 70px; }
+      .side-link { min-width: 74px; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
+      .intelligence-banner { grid-template-columns: 1fr 1fr; }
       header { flex-direction: column; align-items: flex-start; }
     }
 
     @media (max-width: 560px) {
       .stats-grid { grid-template-columns: 1fr; }
+      .intelligence-banner { grid-template-columns: 1fr; }
       .action-btn { flex: 1 1 100%; max-width: none; }
     }
   </style>
 </head>
 <body>
 
+  <aside class="floating-sidebar" aria-label="Executive navigation">
+    <div class="status-dot" aria-hidden="true"></div>
+    <div class="label">Live ops</div>
+    <a class="side-link" href="#overview" data-tab-target="home"><span class="icon" aria-hidden="true">📊</span><span>Overview</span></a>
+    <a class="side-link" href="#portfolio" data-tab-target="home"><span class="icon" aria-hidden="true">🏠</span><span>Units</span></a>
+    <a class="side-link" href="#operations" data-tab-target="residents"><span class="icon" aria-hidden="true">🩺</span><span>Operations</span></a>
+    <a class="side-link" href="#funding" data-tab-target="funding"><span class="icon" aria-hidden="true">💙</span><span>Funding</span></a>
+  </aside>
+
   <div class="container">
 
     <header>
       <div>
         <h1>Bophelong Executive Overview</h1>
-        <div class="subtitle">Old Age Home • Children's Home • Community Care • Gauteng</div>
+        <div class="subtitle">Old Age Home • Children's Home • Mental Disability Home • BIS School</div>
       </div>
       <div style="text-align:right;">
         <div style="font-size:0.9rem; color:var(--muted);">March 2026</div>
-        <div style="font-size:0.95rem; color:#16a34a; font-weight:600;">All systems synced</div>
+        <div style="font-size:0.95rem; color:#16a34a; font-weight:600;">All systems synced • Executive watch active</div>
       </div>
     </header>
 
     <div class="alert">
-      <strong>Today's Priorities:</strong> 3 residents need medical review • School fees R18,400 overdue • New donation received R45,000 (Nashua CSI)
+      <strong>Today's Priorities:</strong> 3 children need therapy review • 5 medication rounds overdue at the old age home • BIS fees R18,400 overdue • New donor pledge received R45,000
     </div>
 
-    <div class="stats-grid">
+    <div class="stats-grid" id="overview">
       <div class="stat-card">
         <h3>Children's Home</h3>
         <div class="value">87</div>
-        <div class="change positive">+7 this month • 95% occupancy</div>
+        <div class="change positive">Medical + social work monitored • 95% occupancy</div>
       </div>
 
       <div class="stat-card">
         <h3>Old Age Home</h3>
         <div class="value">142</div>
-        <div class="change positive">+4 this month • 98% occupancy</div>
+        <div class="change positive">Medication & visitation monitored • 98% occupancy</div>
       </div>
 
       <div class="stat-card">
-        <h3>Healthcare</h3>
-        <div class="value">64</div>
-        <div class="change">3 critical cases</div>
+        <h3>Mental Disability Home</h3>
+        <div class="value">61</div>
+        <div class="change">Daily care plans • 4 flagged follow-ups</div>
       </div>
 
       <div class="stat-card">
         <h3>BIS School</h3>
         <div class="value">231</div>
-        <div class="change">18 teachers • Term 1 2026</div>
+        <div class="change">Attendance, grades & fee collection live</div>
       </div>
     </div>
 
-    <div class="funding-panel">
-      <h2>Funding & CSI – YTD 2026</h2>
-      <div class="funding-grid">
-        <div>
-          <div class="big">R2.85M</div>
-          <div style="color:var(--muted); font-size:0.9rem;">Total Received</div>
-        </div>
-        <div>
-          <div class="big" style="color:#10b981;">+R184k</div>
-          <div style="color:var(--muted); font-size:0.9rem;">This Month</div>
-        </div>
-        <div>
-          <div class="big" style="color:#d97706;">92%</div>
-          <div style="color:var(--muted); font-size:0.9rem;">Gap Covered</div>
-        </div>
-        <div>
-          <div class="big" style="color:var(--purple);">97%</div>
-          <div style="color:var(--muted); font-size:0.9rem;">Compliance</div>
-        </div>
+    <section class="intelligence-banner">
+      <div>
+        <h2>Integrated programme intelligence</h2>
+        <p style="color:var(--muted); line-height:1.6;">
+          The executive view now mirrors the core modules used across the homes and BIS School: residents or learners, health, staffing, tasks, inventory, finance, and donor activity.
+        </p>
       </div>
-      <div style="margin-top:20px; color:var(--muted);">
-        Recent: Nashua Children's Charity • Spur Foundation • Gift of the Givers
+      <div class="intelligence-metric">
+        <strong>521</strong>
+        <span>People served across all units</span>
       </div>
-    </div>
+      <div class="intelligence-metric">
+        <strong>84%</strong>
+        <span>Open tasks resolved on time</span>
+      </div>
+      <div class="intelligence-metric">
+        <strong>R126k</strong>
+        <span>Revenue and fee follow-up required</span>
+      </div>
+    </section>
 
     <div class="quick-actions">
-      <button class="action-btn"><i class="fas fa-plus"></i> Log Donation</button>
-      <button class="action-btn"><i class="fas fa-flag"></i> Report Urgent Issue</button>
-      <button class="action-btn"><i class="fas fa-file-export"></i> Export Monthly Summary</button>
+      <button class="action-btn" data-tab-target="funding" data-scroll-target="funding"><span class="icon" aria-hidden="true">＋</span> Log Donation</button>
+      <button class="action-btn" data-tab-target="residents" data-scroll-target="operations"><span class="icon" aria-hidden="true">⚑</span> Review Operational Risks</button>
+      <button class="action-btn" data-tab-target="home" data-scroll-target="portfolio"><span class="icon" aria-hidden="true">⇪</span> Open Executive Summary</button>
     </div>
 
     <nav class="tabs">
-      <button class="active">Home</button>
-      <button>Residents</button>
-      <button>Funding & CSI</button>
+      <button class="active" data-section="home">Home</button>
+      <button data-section="residents">Operations</button>
+      <button data-section="funding">Funding & CSI</button>
     </nav>
 
-    <!-- Minimal content for other tabs (expand later) -->
-    <div class="section active">
-      <p style="color:var(--muted);">At-a-glance executive view • Johannesburg / Vanderbijlpark operations</p>
-    </div>
+    <section class="section active" data-section-panel="home">
+      <div class="section-heading">
+        <h2>Executive smart monitor</h2>
+        <p style="color:var(--muted);">Cross-facility monitoring using the same operational themes found in the homes and BIS school systems.</p>
+      </div>
+      <div class="smart-grid">
+        <article class="dashboard-card">
+          <div class="pill success"><span class="icon" aria-hidden="true">👥</span> Staffing</div>
+          <h3>92 staff on duty</h3>
+          <p style="color:var(--muted); line-height:1.6;">Track carers, nurses, social workers, educators, and support staff from one place for smoother handovers.</p>
+          <div class="metric-row"><span>Coverage today</span><strong>96%</strong></div>
+        </article>
+        <article class="dashboard-card">
+          <div class="pill warning"><span class="icon" aria-hidden="true">🧾</span> Care follow-up</div>
+          <h3>12 cases need review</h3>
+          <p style="color:var(--muted); line-height:1.6;">Combines medical records, therapy schedules, visit logs, and resident wellness follow-ups into a single queue.</p>
+          <div class="metric-row"><span>Critical now</span><strong>4</strong></div>
+        </article>
+        <article class="dashboard-card">
+          <div class="pill danger"><span class="icon" aria-hidden="true">📦</span> Inventory & supply</div>
+          <h3>7 low-stock items</h3>
+          <p style="color:var(--muted); line-height:1.6;">Highlights food, medication, school essentials, and care consumables before they impact service delivery.</p>
+          <div class="metric-row"><span>Units affected</span><strong>3</strong></div>
+        </article>
+      </div>
+
+      <div class="section-heading" id="portfolio">
+        <h2>Programme portfolio</h2>
+        <p style="color:var(--muted);">Each card reflects the focus areas already managed in the linked systems, surfaced for executive oversight.</p>
+      </div>
+      <div class="facility-grid">
+        <article class="facility-card">
+          <h3>Children's Home</h3>
+          <ul>
+            <li>Children, adoptions, events, inventory, and donor activity aligned for daily visibility.</li>
+            <li>School readiness, medical reviews, and social work interventions grouped under one unit scorecard.</li>
+          </ul>
+          <div class="mini-stat"><span>Priority cases</span><strong>3 therapy reviews</strong></div>
+          <div class="mini-stat"><span>Occupancy</span><strong>95%</strong></div>
+        </article>
+        <article class="facility-card">
+          <h3>Old Age Home</h3>
+          <ul>
+            <li>Resident wellbeing, medication rounds, visitations, and staff tasks surfaced for leadership escalation.</li>
+            <li>Expense and inspection readiness stay visible alongside activity participation.</li>
+          </ul>
+          <div class="mini-stat"><span>Medication exceptions</span><strong>5 overdue rounds</strong></div>
+          <div class="mini-stat"><span>Occupancy</span><strong>98%</strong></div>
+        </article>
+        <article class="facility-card">
+          <h3>Mental Disability Home</h3>
+          <ul>
+            <li>Care plans, wellness notes, and support staffing are grouped into a clearer operational watchlist.</li>
+            <li>Therapy sessions and safeguarding actions can be reviewed with the rest of the organisation.</li>
+          </ul>
+          <div class="mini-stat"><span>Flagged support plans</span><strong>4</strong></div>
+          <div class="mini-stat"><span>Support coverage</span><strong>91%</strong></div>
+        </article>
+        <article class="facility-card">
+          <h3>BIS School</h3>
+          <ul>
+            <li>Attendance, learner performance, teachers, and fees translate into executive early-warning signals.</li>
+            <li>Academic delivery sits beside finance so management can act before arrears or absenteeism grows.</li>
+          </ul>
+          <div class="mini-stat"><span>Attendance</span><strong>94%</strong></div>
+          <div class="mini-stat"><span>Fees overdue</span><strong>R18,400</strong></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" data-section-panel="residents">
+      <div class="section-heading" id="operations">
+        <h2>Operational watchlist</h2>
+        <p style="color:var(--muted);">A more intelligent executive screen for the daily issues that need quick escalation across care, education, and administration.</p>
+      </div>
+      <div class="watch-grid">
+        <article class="watch-card">
+          <div class="pill danger"><span class="icon" aria-hidden="true">🔔</span> Escalate now</div>
+          <h3>Health and care alerts</h3>
+          <ul>
+            <li>2 frail-care residents waiting on doctor sign-off.</li>
+            <li>1 child scheduled for an urgent therapy reassessment.</li>
+            <li>1 mental disability support plan requires family follow-up.</li>
+          </ul>
+        </article>
+        <article class="watch-card">
+          <div class="pill warning"><span class="icon" aria-hidden="true">🗂️</span> Workflow risk</div>
+          <h3>Task and compliance queue</h3>
+          <ul>
+            <li>9 operational tasks are overdue across nursing, maintenance, and school admin.</li>
+            <li>2 inspection files need updated evidence before month end.</li>
+            <li>Inventory reorder cycle has slipped at 3 units.</li>
+          </ul>
+        </article>
+        <article class="watch-card">
+          <div class="pill success"><span class="icon" aria-hidden="true">✅</span> Service coverage</div>
+          <h3>People and programme capacity</h3>
+          <ul>
+            <li>Teacher-to-learner ratio remains within target at BIS.</li>
+            <li>Weekend staffing roster is fully assigned for all homes.</li>
+            <li>Volunteer visits recovered after two new partners were onboarded.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" data-section-panel="funding">
+      <div class="funding-panel" id="funding">
+        <h2>Funding & CSI – YTD 2026</h2>
+        <div class="funding-grid">
+          <div>
+            <div class="big">R2.85M</div>
+            <div style="color:var(--muted); font-size:0.9rem;">Total Received</div>
+          </div>
+          <div>
+            <div class="big" style="color:#10b981;">+R184k</div>
+            <div style="color:var(--muted); font-size:0.9rem;">This Month</div>
+          </div>
+          <div>
+            <div class="big" style="color:#d97706;">92%</div>
+            <div style="color:var(--muted); font-size:0.9rem;">Gap Covered</div>
+          </div>
+          <div>
+            <div class="big" style="color:var(--purple);">97%</div>
+            <div style="color:var(--muted); font-size:0.9rem;">Compliance</div>
+          </div>
+        </div>
+        <div style="margin-top:20px; color:var(--muted);">
+          Recent: Nashua Children's Charity • Spur Foundation • Gift of the Givers
+        </div>
+      </div>
+      <div class="section-heading">
+        <h2>Executive funding signals</h2>
+        <p style="color:var(--muted);">Donations, fees, and operational budgets are aligned so leadership can respond faster to pressure points.</p>
+      </div>
+      <div class="resource-grid">
+        <article class="dashboard-card">
+          <h3>Donor momentum</h3>
+          <div class="mini-stat"><span>Active CSI partners</span><strong>14</strong></div>
+          <div class="mini-stat"><span>New pledge</span><strong>R45,000</strong></div>
+          <div class="mini-stat"><span>Renewals due</span><strong>3 this quarter</strong></div>
+        </article>
+        <article class="dashboard-card">
+          <h3>School fees</h3>
+          <div class="mini-stat"><span>Collected this month</span><strong>R126,800</strong></div>
+          <div class="mini-stat"><span>Outstanding</span><strong>R18,400</strong></div>
+          <div class="mini-stat"><span>Accounts at risk</span><strong>8</strong></div>
+        </article>
+        <article class="dashboard-card">
+          <h3>Operational spend</h3>
+          <div class="mini-stat"><span>Medical and care</span><strong>41%</strong></div>
+          <div class="mini-stat"><span>Food and supplies</span><strong>27%</strong></div>
+          <div class="mini-stat"><span>Education and transport</span><strong>18%</strong></div>
+        </article>
+      </div>
+    </section>
 
   </div>
 
   <script>
-    // Very basic tab switching (demo)
-    document.querySelectorAll('nav.tabs button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        // In real version: show/hide sections here
+    const tabButtons = document.querySelectorAll('nav.tabs button');
+    const panels = document.querySelectorAll('[data-section-panel]');
+
+    function activateSection(sectionName) {
+      tabButtons.forEach(button => {
+        button.classList.toggle('active', button.dataset.section === sectionName);
+      });
+      panels.forEach(panel => {
+        panel.classList.toggle('active', panel.dataset.sectionPanel === sectionName);
+      });
+    }
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => activateSection(button.dataset.section));
+    });
+
+    document.querySelectorAll('[data-tab-target]').forEach(trigger => {
+      trigger.addEventListener('click', event => {
+        const sectionName = trigger.dataset.tabTarget;
+        if (sectionName) activateSection(sectionName);
+
+        const scrollTarget = trigger.dataset.scrollTarget || (trigger.getAttribute('href') || '').replace('#', '');
+        if (!scrollTarget) return;
+
+        const targetElement = document.getElementById(scrollTarget);
+        if (targetElement) {
+          event.preventDefault();
+          window.setTimeout(() => {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 60);
+        }
       });
     });
   </script>
