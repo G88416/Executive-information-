@@ -812,7 +812,7 @@
     });
 
     function getValue(source, path) {
-      return path.split('.').reduce((value, key) => (value == null ? undefined : value[key]), source);
+      return path.split('.').reduce((value, key) => (value === null || value === undefined ? undefined : value[key]), source);
     }
 
     function mergeDeep(base, updates) {
@@ -950,7 +950,7 @@
       } catch (error) {
         updateFirebaseStatus(
           'error',
-          'Firebase initialisation failed',
+          'Firebase initialization failed',
           ['Please verify ', { type: 'code', value: 'window.EXECUTIVE_FIREBASE_CONFIG' }, '. Error: ' + error.message]
         );
       }
