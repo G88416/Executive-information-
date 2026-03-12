@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOPHELONG EIS • Executive Intelligence System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+        
+        :root {
+            --primary: 234 179 8;
+        }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .logo-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-link:hover {
+            transform: translateX(8px);
+            color: rgb(234 179 8);
+        }
+
+        .kpi-card {
+            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        }
+
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+
+        .live-dot {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .data-row {
+            transition: all 0.2s ease;
+        }
+        
+        .data-row:hover {
+            background: rgba(234, 179, 8, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200 min-h-screen overflow-hidden">
+    <div class="flex h-screen">
+        <!-- SIDEBAR -->
+        <div class="w-72 bg-zinc-900 border-r border-zinc-800 flex flex-col">
+            <!-- Logo -->
+            <div class="p-8 border-b border-zinc-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-yellow-400 rounded-2xl flex items-center justify-center text-zinc-950 font-bold text-3xl shadow-inner">B</div>
+                    <div>
+                        <span class="logo-font text-3xl font-semibold tracking-tighter text-white">BOPHELONG</span>
+                    </div>
+                </div>
+                <p class="text-yellow-400 text-xs tracking-[3px] mt-1 font-mono">EXECUTIVE INTELLIGENCE SYSTEM</p>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex-1 px-4 py-6 overflow-y-auto">
+                <div onclick="switchSection('dashboard')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1 text-lg font-medium active">
+                    <i class="fa-solid fa-chart-line w-5"></i>
+                    <span>Executive Dashboard</span>
+                </div>
+                
+                <div class="px-6 text-xs font-mono text-zinc-500 mt-8 mb-3">FACILITIES</div>
+                
+                <div onclick="switchSection('oldage')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1">
+                    <i class="fa-solid fa-house-user w-5"></i>
+                    <span>Old Age Home</span>
+                </div>
+                <div onclick="switchSection('children')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1">
+                    <i class="fa-solid fa-child w-5"></i>
+                    <span>Children's Home</span>
+                </div>
+                <div onclick="switchSection('health')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1">
+                    <i class="fa-solid fa-hospital w-5"></i>
+                    <span>Healthcare Admin</span>
+                </div>
+                <div onclick="switchSection('school')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1">
+                    <i class="fa-solid fa-school w-5"></i>
+                    <span>BIS School</span>
+                </div>
+
+                <div class="px-6 text-xs font-mono text-zinc-500 mt-8 mb-3">INTELLIGENCE</div>
+                
+                <div onclick="switchSection('reports')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1">
+                    <i class="fa-solid fa-file-chart-pie w-5"></i>
+                    <span>Advanced Reports</span>
+                </div>
+                <div onclick="switchSection('ai')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer">
+                    <i class="fa-solid fa-brain w-5"></i>
+                    <span>AI Executive Advisor</span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-6 border-t border-zinc-800 text-xs font-mono text-zinc-500 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-emerald-400 rounded-full live-dot"></div>
+                    <span>ALL SYSTEMS LIVE</span>
+                </div>
+                <button onclick="logout()" class="text-zinc-400 hover:text-white transition">SIGN OUT</button>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 flex flex-col">
+            <!-- TOP BAR -->
+            <div class="h-16 bg-zinc-900 border-b border-zinc-800 px-8 flex items-center justify-between z-50">
+                <div class="flex items-center gap-4">
+                    <div class="text-xl font-semibold tracking-tight">Bophelong Unified Command Center</div>
+                    <div class="px-3 py-1 bg-yellow-400/10 text-yellow-400 text-xs font-mono rounded-3xl flex items-center gap-1">
+                        <i class="fa-solid fa-satellite"></i>
+                        <span>REAL-TIME SYNC</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-6">
+                    <!-- Quick Links -->
+                    <div class="flex gap-2">
+                        <a href="https://plucky-hue-480011-h4.web.app/" target="_blank" 
+                           class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm flex items-center gap-2 transition">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            <span>Healthcare Admin</span>
+                        </a>
+                        <a href="https://bophelong-old-age-home.firebaseapp.com/" target="_blank" 
+                           class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm flex items-center gap-2 transition">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            <span>Old Age Home</span>
+                        </a>
+                        <a href="https://children-s-home-a0ce1.web.app/" target="_blank" 
+                           class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm flex items-center gap-2 transition">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            <span>Children's Home</span>
+                        </a>
+                        <a href="https://bis-management-system-d77f4.web.app/" target="_blank" 
+                           class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm flex items-center gap-2 transition">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            <span>BIS School</span>
+                        </a>
+                    </div>
+
+                    <div class="w-px h-8 bg-zinc-700"></div>
+                    
+                    <div class="flex items-center gap-3">
+                        <div class="text-right">
+                            <div class="text-sm font-medium">Dr. Thabo Mokoena</div>
+                            <div class="text-xs text-zinc-500">Executive Director</div>
+                        </div>
+                        <div class="w-9 h-9 bg-gradient-to-br from-yellow-400 to-amber-600 rounded-2xl flex items-center justify-center text-xl">👨‍💼</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENT AREA -->
+            <div class="flex-1 overflow-auto p-8" id="main-content">
+
+                <!-- DASHBOARD SECTION -->
+                <div id="dashboard" class="section active">
+                    <div class="grid grid-cols-12 gap-6">
+                        <!-- KPI ROW -->
+                        <div class="col-span-12 grid grid-cols-4 gap-6">
+                            <div onclick="switchSection('oldage')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer">
+                                <div class="flex justify-between">
+                                    <div>
+                                        <div class="text-emerald-400 text-sm font-mono">OLD AGE HOME</div>
+                                        <div class="text-6xl font-bold tracking-tighter text-white mt-2">142</div>
+                                        <div class="text-zinc-400">Residents • 98% Occupancy</div>
+                                    </div>
+                                    <i class="fa-solid fa-house-user text-6xl text-emerald-500/30"></i>
+                                </div>
+                            </div>
+                            
+                            <div onclick="switchSection('children')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer">
+                                <div class="flex justify-between">
+                                    <div>
+                                        <div class="text-sky-400 text-sm font-mono">CHILDREN'S HOME</div>
+                                        <div class="text-6xl font-bold tracking-tighter text-white mt-2">87</div>
+                                        <div class="text-zinc-400">Children • 12 Adoptions YTD</div>
+                                    </div>
+                                    <i class="fa-solid fa-child text-6xl text-sky-500/30"></i>
+                                </div>
+                            </div>
+                            
+                            <div onclick="switchSection('health')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer">
+                                <div class="flex justify-between">
+                                    <div>
+                                        <div class="text-rose-400 text-sm font-mono">HEALTHCARE ADMIN</div>
+                                        <div class="text-6xl font-bold tracking-tighter text-white mt-2">64</div>
+                                        <div class="text-zinc-400">Active Patients • 3 Critical</div>
+                                    </div>
+                                    <i class="fa-solid fa-hospital text-6xl text-rose-500/30"></i>
+                                </div>
+                            </div>
+                            
+                            <div onclick="switchSection('school')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer">
+                                <div class="flex justify-between">
+                                    <div>
+                                        <div class="text-violet-400 text-sm font-mono">BIS SCHOOL</div>
+                                        <div class="text-6xl font-bold tracking-tighter text-white mt-2">231</div>
+                                        <div class="text-zinc-400">Students • 18 Teachers</div>
+                                    </div>
+                                    <i class="fa-solid fa-school text-6xl text-violet-500/30"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CHARTS -->
+                        <div class="col-span-8 bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
+                            <div class="flex justify-between mb-6">
+                                <div class="font-semibold text-xl">Organization Performance • Last 90 Days</div>
+                                <select id="chart-filter" class="bg-zinc-800 text-sm px-4 rounded-2xl border border-zinc-700 focus:outline-none">
+                                    <option>All Facilities</option>
+                                    <option>Donations</option>
+                                    <option>Occupancy</option>
+                                </select>
+                            </div>
+                            <canvas id="mainChart" class="h-80"></canvas>
+                        </div>
+
+                        <div class="col-span-4 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 flex flex-col">
+                            <div class="font-semibold text-xl mb-6">Facility Health</div>
+                            <div class="flex-1 space-y-6">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-emerald-400">Old Age Home</span>
+                                    <div class="flex-1 mx-4 h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div class="h-full w-[98%] bg-emerald-400"></div>
+                                    </div>
+                                    <span class="font-mono">98%</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sky-400">Children's Home</span>
+                                    <div class="flex-1 mx-4 h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div class="h-full w-[95%] bg-sky-400"></div>
+                                    </div>
+                                    <span class="font-mono">95%</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-rose-400">Healthcare</span>
+                                    <div class="flex-1 mx-4 h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div class="h-full w-[89%] bg-rose-400"></div>
+                                    </div>
+                                    <span class="font-mono">89%</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-violet-400">BIS School</span>
+                                    <div class="flex-1 mx-4 h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div class="h-full w-[100%] bg-violet-400"></div>
+                                    </div>
+                                    <span class="font-mono">100%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-auto pt-8 border-t border-zinc-800">
+                                <div class="text-xs uppercase font-mono mb-2">Critical Alerts</div>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex items-center gap-3 bg-zinc-800 p-4 rounded-2xl">
+                                        <i class="fa-solid fa-circle-exclamation text-amber-400"></i>
+                                        <div class="flex-1">3 residents in Old Age Home need medical review</div>
+                                    </div>
+                                    <div class="flex items-center gap-3 bg-zinc-800 p-4 rounded-2xl">
+                                        <i class="fa-solid fa-circle-exclamation text-rose-400"></i>
+                                        <div class="flex-1">School term fees overdue: R18,400</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- QUICK STATS -->
+                        <div class="col-span-12 grid grid-cols-3 gap-6">
+                            <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
+                                <div class="flex justify-between text-sm font-mono">
+                                    <span class="text-yellow-400">TOTAL DONATIONS YTD</span>
+                                    <span class="text-emerald-400">+R1.84M</span>
+                                </div>
+                                <div class="text-5xl font-bold tracking-tighter mt-4">R 2,847,920</div>
+                                <canvas id="donationChart" class="h-32 mt-6"></canvas>
+                            </div>
+                            
+                            <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
+                                <div class="flex justify-between text-sm font-mono">
+                                    <span>TOTAL BENEFICIARIES</span>
+                                    <span class="text-emerald-400">460</span>
+                                </div>
+                                <div class="text-5xl font-bold tracking-tighter mt-4">460</div>
+                                <div class="mt-8 grid grid-cols-2 gap-4 text-xs">
+                                    <div class="bg-zinc-800 rounded-2xl p-4">142 Seniors<br><span class="text-emerald-400">+4 this month</span></div>
+                                    <div class="bg-zinc-800 rounded-2xl p-4">87 Children<br><span class="text-emerald-400">+7 this month</span></div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 relative overflow-hidden">
+                                <div class="flex justify-between text-sm font-mono">
+                                    <span>COMPLIANCE SCORE</span>
+                                </div>
+                                <div class="text-[120px] font-black text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-amber-600 leading-none tracking-[-8px] -mt-6">97</div>
+                                <div class="absolute bottom-8 right-8 text-xs bg-black/70 px-6 py-2 rounded-3xl">↑ 2% from last quarter</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OLD AGE HOME SECTION -->
+                <div id="oldage" class="section">
+                    <div class="max-w-5xl mx-auto">
+                        <div class="flex justify-between items-end mb-8">
+                            <div>
+                                <div class="text-emerald-400 font-mono text-sm">BOPHELONG OLD AGE HOME</div>
+                                <div class="text-4xl font-bold">Resident Intelligence Dashboard</div>
+                            </div>
+                            <a href="https://bophelong-old-age-home.firebaseapp.com/" target="_blank" 
+                               class="px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-black font-semibold rounded-3xl flex items-center gap-3 transition">
+                                OPEN FULL SYSTEM <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="grid grid-cols-12 gap-6">
+                            <div class="col-span-8 bg-zinc-900 rounded-3xl p-8">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="border-b border-zinc-800 text-xs font-mono text-zinc-400">
+                                            <th class="text-left py-4">Resident</th>
+                                            <th class="text-left">Age</th>
+                                            <th class="text-left">Health</th>
+                                            <th class="text-left">Room</th>
+                                            <th class="text-right">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-sm">
+                                        <tr class="data-row border-b border-zinc-800">
+                                            <td class="py-5">Mrs. Nomvula Dlamini</td>
+                                            <td>81</td>
+                                            <td class="text-emerald-400">Stable</td>
+                                            <td>A-12</td>
+                                            <td class="text-right"><span class="bg-emerald-400/10 text-emerald-400 px-4 py-1 rounded-3xl text-xs">Active</span></td>
+                                        </tr>
+                                        <tr class="data-row border-b border-zinc-800">
+                                            <td class="py-5">Mr. Sipho Nkosi</td>
+                                            <td>79</td>
+                                            <td class="text-amber-400">Needs review</td>
+                                            <td>B-03</td>
+                                            <td class="text-right"><span class="bg-amber-400/10 text-amber-400 px-4 py-1 rounded-3xl text-xs">Pending</span></td>
+                                        </tr>
+                                        <!-- more rows omitted for brevity -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="col-span-4 bg-zinc-900 rounded-3xl p-8">
+                                <div class="text-center">
+                                    <div class="text-7xl font-black text-emerald-400">142</div>
+                                    <div class="text-zinc-400 mt-1">Current Residents</div>
+                                    <canvas id="oldAgePie" class="h-64"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHILDREN'S HOME SECTION -->
+                <div id="children" class="section">
+                    <div class="max-w-5xl mx-auto">
+                        <div class="flex justify-between items-end mb-8">
+                            <div>
+                                <div class="text-sky-400 font-mono text-sm">BOPHELONG CHILDREN'S HOME</div>
+                                <div class="text-4xl font-bold">Child Welfare Command Center</div>
+                            </div>
+                            <a href="https://children-s-home-a0ce1.web.app/" target="_blank" 
+                               class="px-8 py-4 bg-sky-500 hover:bg-sky-600 text-black font-semibold rounded-3xl flex items-center gap-3 transition">
+                                OPEN FULL SYSTEM <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="bg-zinc-900 rounded-3xl p-8">
+                            <div class="grid grid-cols-3 gap-8">
+                                <div>
+                                    <div class="font-mono text-xs text-sky-400 mb-3">GENDER DISTRIBUTION</div>
+                                    <canvas id="childrenGender" class="h-72"></canvas>
+                                </div>
+                                <div class="col-span-2">
+                                    <div class="text-6xl font-bold">87 Children</div>
+                                    <div class="mt-12 grid grid-cols-2 gap-8">
+                                        <div class="bg-zinc-800 rounded-3xl p-6">
+                                            <div class="text-sm">Pending Adoptions</div>
+                                            <div class="text-5xl font-bold text-sky-400 mt-2">7</div>
+                                        </div>
+                                        <div class="bg-zinc-800 rounded-3xl p-6">
+                                            <div class="text-sm">Medical Records Updated Today</div>
+                                            <div class="text-5xl font-bold text-emerald-400 mt-2">14</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HEALTHCARE ADMIN SECTION -->
+                <div id="health" class="section">
+                    <div class="max-w-5xl mx-auto">
+                        <div class="flex justify-between items-end mb-8">
+                            <div>
+                                <div class="text-rose-400 font-mono text-sm">BOPHELONG HEALTHCARE ADMIN</div>
+                                <div class="text-4xl font-bold">Patient &amp; Clinical Oversight</div>
+                            </div>
+                            <a href="https://plucky-hue-480011-h4.web.app/" target="_blank" 
+                               class="px-8 py-4 bg-rose-500 hover:bg-rose-600 text-black font-semibold rounded-3xl flex items-center gap-3 transition">
+                                OPEN FULL SYSTEM <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                        <div class="text-center py-16 bg-zinc-900 rounded-3xl">
+                            <div class="mx-auto w-24 h-24 bg-rose-500/10 rounded-full flex items-center justify-center text-6xl mb-6">🏥</div>
+                            <div class="text-3xl font-medium">64 Active Patients • 3 Critical Cases</div>
+                            <p class="text-zinc-400 mt-2">Medication schedules synced in real-time across all wings</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCHOOL SECTION -->
+                <div id="school" class="section">
+                    <div class="max-w-5xl mx-auto">
+                        <div class="flex justify-between items-end mb-8">
+                            <div>
+                                <div class="text-violet-400 font-mono text-sm">BIS SCHOOL MANAGEMENT SYSTEM</div>
+                                <div class="text-4xl font-bold">Academic &amp; Student Intelligence</div>
+                            </div>
+                            <a href="https://bis-management-system-d77f4.web.app/" target="_blank" 
+                               class="px-8 py-4 bg-violet-500 hover:bg-violet-600 text-black font-semibold rounded-3xl flex items-center gap-3 transition">
+                                OPEN FULL SYSTEM <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                        <div class="bg-zinc-900 rounded-3xl p-10 text-center">
+                            <div class="text-7xl font-black text-violet-400">231</div>
+                            <div class="text-2xl text-zinc-400">Enrolled Students • Term 1 2026</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REPORTS SECTION -->
+                <div id="reports" class="section">
+                    <div class="max-w-4xl mx-auto text-center py-20">
+                        <div class="text-5xl font-bold mb-4">Advanced Analytics Engine</div>
+                        <p class="text-zinc-400 max-w-md mx-auto">Export consolidated reports from all four facilities in one click. AI-powered trend forecasting included.</p>
+                        <button onclick="alert('📊 Full consolidated PDF generated and downloaded (demo)')" 
+                                class="mt-12 px-12 py-6 bg-white text-zinc-950 rounded-3xl font-semibold text-xl hover:scale-105 transition">
+                            GENERATE Q1 2026 EXECUTIVE REPORT
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI ADVISOR SECTION -->
+                <div id="ai" class="section">
+                    <div class="max-w-2xl mx-auto bg-zinc-900 rounded-3xl p-8">
+                        <div class="text-yellow-400 font-mono mb-2">GROK-POWERED EXECUTIVE ADVISOR</div>
+                        <div class="text-4xl font-bold mb-8">What should I focus on today?</div>
+                        
+                        <div class="space-y-6">
+                            <div class="p-6 bg-zinc-800 rounded-3xl">
+                                Prioritize medical review for 3 Old Age Home residents flagged by the system.
+                            </div>
+                            <div class="p-6 bg-zinc-800 rounded-3xl">
+                                Children's Home adoption pipeline shows 7 high-probability matches this month.
+                            </div>
+                            <div class="p-6 bg-zinc-800 rounded-3xl">
+                                BIS School attendance is 99.2% — best performance in 18 months.
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12 bg-black rounded-3xl p-6 text-xs font-mono text-yellow-400/70">
+                            This AI insight is generated from live data across all four Bophelong systems.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATUS BAR -->
+            <div class="h-12 bg-zinc-900 border-t border-zinc-800 px-8 flex items-center text-xs font-mono text-zinc-500">
+                <div class="flex-1 flex items-center gap-8">
+                    <span>Last synced: <span class="text-emerald-400">moments ago</span></span>
+                    <span>4 systems connected • 0 errors</span>
+                </div>
+                <div class="text-yellow-400">© 2026 Bophelong Care Network • Cutting-edge EIS v4.2.1</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tailwind script run
+        function initializeTailwind() {
+            tailwind.config = {
+                content: [],
+                theme: {
+                    extend: {}
+                }
+            }
+        }
+        
+        // Chart configurations
+        let mainChartInstance, donationChartInstance, oldAgePieInstance, childrenGenderInstance;
+        
+        function createMainChart() {
+            const ctx = document.getElementById('mainChart');
+            if (mainChartInstance) mainChartInstance.destroy();
+            
+            mainChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar'],
+                    datasets: [
+                        {
+                            label: 'Total Beneficiaries',
+                            data: [412, 438, 460],
+                            borderColor: '#facc15',
+                            tension: 0.4,
+                            borderWidth: 4
+                        },
+                        {
+                            label: 'Donations (R\'000)',
+                            data: [620, 910, 1840],
+                            borderColor: '#22c55e',
+                            tension: 0.4,
+                            borderWidth: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: true, position: 'top' } },
+                    scales: {
+                        y: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } },
+                        x: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } }
+                    }
+                }
+            });
+        }
+        
+        function createDonationChart() {
+            const ctx = document.getElementById('donationChart');
+            if (donationChartInstance) donationChartInstance.destroy();
+            
+            donationChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [{
+                        data: [210000, 340000, 520000, 770000],
+                        backgroundColor: '#eab308',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { display: false }, x: { grid: { display: false } } }
+                }
+            });
+        }
+        
+        function createOldAgePie() {
+            const ctx = document.getElementById('oldAgePie');
+            if (oldAgePieInstance) oldAgePieInstance.destroy();
+            
+            oldAgePieInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Male', 'Female'],
+                    datasets: [{
+                        data: [58, 84],
+                        backgroundColor: ['#10b981', '#22c55e'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '75%',
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+        
+        function createChildrenGender() {
+            const ctx = document.getElementById('childrenGender');
+            if (childrenGenderInstance) childrenGenderInstance.destroy();
+            
+            childrenGenderInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Boys', 'Girls'],
+                    datasets: [{
+                        data: [41, 46],
+                        backgroundColor: ['#0ea5e9', '#38bdf8'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+        
+        function switchSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById(section);
+            if (target) target.classList.add('active');
+            
+            // Refresh charts when switching to dashboard
+            if (section === 'dashboard') {
+                setTimeout(() => {
+                    createMainChart();
+                    createDonationChart();
+                }, 100);
+            }
+        }
+        
+        function logout() {
+            if (confirm("End executive session?")) {
+                window.location.reload();
+            }
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.metaKey && e.key === 'k') {
+                e.preventDefault();
+                alert("🔍 Global search activated (demo)");
+            }
+        });
+        
+        // Initialize everything
+        window.onload = function() {
+            initializeTailwind();
+            
+            // Initial charts
+            createMainChart();
+            createDonationChart();
+            createOldAgePie();
+            createChildrenGender();
+            
+            // Fake live update every 30 seconds
+            setInterval(() => {
+                const live = document.querySelector('.live-dot');
+                if (live) live.style.opacity = live.style.opacity === '1' ? '0.3' : '1';
+            }, 30000);
+            
+            // Welcome toast
+            setTimeout(() => {
+                const toast = document.createElement('div');
+                toast.style.cssText = 'position:fixed;bottom:30px;right:30px;background:#111; color:#facc15; padding:20px 30px;border-radius:9999px;font-size:13px;font-family:monospace;box-shadow:0 10px 30px -10px black;';
+                toast.innerHTML = '✅ All four Bophelong systems synchronized • Welcome back, Director';
+                document.body.appendChild(toast);
+                
+                setTimeout(() => toast.remove(), 4200);
+            }, 1800);
+            
+            console.log('%c🚀 Bophelong EIS v4.2.1 — State-of-the-art Executive Intelligence System loaded', 'color:#facc15; font-family:monospace');
+        };
+    </script>
+</body>
+</html>
