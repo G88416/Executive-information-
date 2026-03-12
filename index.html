@@ -36,6 +36,11 @@
             color: rgb(234 179 8);
         }
 
+        .nav-link.active {
+            background: rgba(39, 39, 42, 0.9);
+            color: rgb(250 204 21);
+        }
+
         .kpi-card {
             transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
@@ -69,12 +74,35 @@
         .data-row:hover {
             background: rgba(234, 179, 8, 0.1);
         }
+
+        [data-section]:focus-visible,
+        a:focus-visible,
+        button:focus-visible,
+        select:focus-visible {
+            outline: 2px solid rgb(250 204 21);
+            outline-offset: 4px;
+        }
+
+        .chart-fallback {
+            min-height: 12rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: rgb(161 161 170);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border: 1px dashed rgb(63 63 70);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(24, 24, 27, 0.6);
+        }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-200 min-h-screen overflow-hidden">
     <div class="flex h-screen">
         <!-- SIDEBAR -->
-        <div class="w-72 bg-zinc-900 border-r border-zinc-800 flex flex-col">
+        <aside class="w-72 bg-zinc-900 border-r border-zinc-800 flex flex-col" aria-label="Primary navigation">
             <!-- Logo -->
             <div class="p-8 border-b border-zinc-800">
                 <div class="flex items-center gap-3">
@@ -87,42 +115,42 @@
             </div>
 
             <!-- Navigation -->
-            <div class="flex-1 px-4 py-6 overflow-y-auto">
-                <div onclick="switchSection('dashboard')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1 text-lg font-medium active">
+            <nav class="flex-1 px-4 py-6 overflow-y-auto" aria-label="Executive dashboard sections">
+                <div onclick="switchSection('dashboard')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1 text-lg font-medium active" role="button" tabindex="0" data-section="dashboard" data-nav-section="dashboard" aria-current="page">
                     <i class="fa-solid fa-chart-line w-5"></i>
                     <span>Executive Dashboard</span>
                 </div>
                 
                 <div class="px-6 text-xs font-mono text-zinc-500 mt-8 mb-3">FACILITIES</div>
                 
-                <div onclick="switchSection('oldage')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1">
+                <div onclick="switchSection('oldage')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1" role="button" tabindex="0" data-section="oldage" data-nav-section="oldage">
                     <i class="fa-solid fa-house-user w-5"></i>
                     <span>Old Age Home</span>
                 </div>
-                <div onclick="switchSection('children')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1">
+                <div onclick="switchSection('children')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1" role="button" tabindex="0" data-section="children" data-nav-section="children">
                     <i class="fa-solid fa-child w-5"></i>
                     <span>Children's Home</span>
                 </div>
-                <div onclick="switchSection('health')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1">
+                <div onclick="switchSection('health')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1" role="button" tabindex="0" data-section="health" data-nav-section="health">
                     <i class="fa-solid fa-hospital w-5"></i>
                     <span>Healthcare Admin</span>
                 </div>
-                <div onclick="switchSection('school')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1">
+                <div onclick="switchSection('school')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1" role="button" tabindex="0" data-section="school" data-nav-section="school">
                     <i class="fa-solid fa-school w-5"></i>
                     <span>BIS School</span>
                 </div>
 
                 <div class="px-6 text-xs font-mono text-zinc-500 mt-8 mb-3">INTELLIGENCE</div>
                 
-                <div onclick="switchSection('reports')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1">
+                <div onclick="switchSection('reports')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer mb-1" role="button" tabindex="0" data-section="reports" data-nav-section="reports">
                     <i class="fa-solid fa-file-chart-pie w-5"></i>
                     <span>Advanced Reports</span>
                 </div>
-                <div onclick="switchSection('ai')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer">
+                <div onclick="switchSection('ai')" class="nav-link flex items-center gap-3 px-6 py-4 rounded-3xl hover:bg-zinc-800 cursor-pointer" role="button" tabindex="0" data-section="ai" data-nav-section="ai">
                     <i class="fa-solid fa-brain w-5"></i>
                     <span>AI Executive Advisor</span>
                 </div>
-            </div>
+            </nav>
 
             <!-- Footer -->
             <div class="p-6 border-t border-zinc-800 text-xs font-mono text-zinc-500 flex items-center justify-between">
@@ -132,14 +160,14 @@
                 </div>
                 <button onclick="logout()" class="text-zinc-400 hover:text-white transition">SIGN OUT</button>
             </div>
-        </div>
+        </aside>
 
         <!-- MAIN CONTENT -->
-        <div class="flex-1 flex flex-col">
+        <main class="flex-1 flex flex-col">
             <!-- TOP BAR -->
-            <div class="h-16 bg-zinc-900 border-b border-zinc-800 px-8 flex items-center justify-between z-50">
+            <header class="h-16 bg-zinc-900 border-b border-zinc-800 px-8 flex items-center justify-between z-50">
                 <div class="flex items-center gap-4">
-                    <div class="text-xl font-semibold tracking-tight">Bophelong Unified Command Center</div>
+                    <h1 class="text-xl font-semibold tracking-tight">Bophelong Unified Command Center</h1>
                     <div class="px-3 py-1 bg-yellow-400/10 text-yellow-400 text-xs font-mono rounded-3xl flex items-center gap-1">
                         <i class="fa-solid fa-satellite"></i>
                         <span>REAL-TIME SYNC</span>
@@ -149,22 +177,22 @@
                 <div class="flex items-center gap-6">
                     <!-- Quick Links -->
                     <div class="flex gap-2">
-                        <a href="https://plucky-hue-480011-h4.web.app/" target="_blank" 
+                        <a href="https://plucky-hue-480011-h4.web.app/" target="_blank" rel="noopener noreferrer"
                            class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm flex items-center gap-2 transition">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             <span>Healthcare Admin</span>
                         </a>
-                        <a href="https://bophelong-old-age-home.firebaseapp.com/" target="_blank" 
+                        <a href="https://bophelong-old-age-home.firebaseapp.com/" target="_blank" rel="noopener noreferrer"
                            class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm flex items-center gap-2 transition">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             <span>Old Age Home</span>
                         </a>
-                        <a href="https://children-s-home-a0ce1.web.app/" target="_blank" 
+                        <a href="https://children-s-home-a0ce1.web.app/" target="_blank" rel="noopener noreferrer"
                            class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm flex items-center gap-2 transition">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             <span>Children's Home</span>
                         </a>
-                        <a href="https://bis-management-system-d77f4.web.app/" target="_blank" 
+                        <a href="https://bis-management-system-d77f4.web.app/" target="_blank" rel="noopener noreferrer"
                            class="px-5 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm flex items-center gap-2 transition">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             <span>BIS School</span>
@@ -181,17 +209,17 @@
                         <div class="w-9 h-9 bg-gradient-to-br from-yellow-400 to-amber-600 rounded-2xl flex items-center justify-center text-xl">👨‍💼</div>
                     </div>
                 </div>
-            </div>
+            </header>
 
             <!-- CONTENT AREA -->
             <div class="flex-1 overflow-auto p-8" id="main-content">
 
                 <!-- DASHBOARD SECTION -->
-                <div id="dashboard" class="section active">
+                <section id="dashboard" class="section active" aria-labelledby="dashboard-title">
                     <div class="grid grid-cols-12 gap-6">
                         <!-- KPI ROW -->
                         <div class="col-span-12 grid grid-cols-4 gap-6">
-                            <div onclick="switchSection('oldage')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer">
+                            <div onclick="switchSection('oldage')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer" role="button" tabindex="0" data-section="oldage">
                                 <div class="flex justify-between">
                                     <div>
                                         <div class="text-emerald-400 text-sm font-mono">OLD AGE HOME</div>
@@ -202,7 +230,7 @@
                                 </div>
                             </div>
                             
-                            <div onclick="switchSection('children')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer">
+                            <div onclick="switchSection('children')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer" role="button" tabindex="0" data-section="children">
                                 <div class="flex justify-between">
                                     <div>
                                         <div class="text-sky-400 text-sm font-mono">CHILDREN'S HOME</div>
@@ -213,7 +241,7 @@
                                 </div>
                             </div>
                             
-                            <div onclick="switchSection('health')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer">
+                            <div onclick="switchSection('health')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer" role="button" tabindex="0" data-section="health">
                                 <div class="flex justify-between">
                                     <div>
                                         <div class="text-rose-400 text-sm font-mono">HEALTHCARE ADMIN</div>
@@ -224,7 +252,7 @@
                                 </div>
                             </div>
                             
-                            <div onclick="switchSection('school')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer">
+                            <div onclick="switchSection('school')" class="kpi-card col-span-1 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 cursor-pointer" role="button" tabindex="0" data-section="school">
                                 <div class="flex justify-between">
                                     <div>
                                         <div class="text-violet-400 text-sm font-mono">BIS SCHOOL</div>
@@ -239,7 +267,7 @@
                         <!-- CHARTS -->
                         <div class="col-span-8 bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
                             <div class="flex justify-between mb-6">
-                                <div class="font-semibold text-xl">Organization Performance • Last 90 Days</div>
+                                <h2 id="dashboard-title" class="font-semibold text-xl">Organization Performance • Last 90 Days</h2>
                                 <select id="chart-filter" class="bg-zinc-800 text-sm px-4 rounded-2xl border border-zinc-700 focus:outline-none">
                                     <option>All Facilities</option>
                                     <option>Donations</option>
@@ -329,17 +357,17 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <!-- OLD AGE HOME SECTION -->
-                <div id="oldage" class="section">
+                <section id="oldage" class="section" aria-labelledby="oldage-title">
                     <div class="max-w-5xl mx-auto">
                         <div class="flex justify-between items-end mb-8">
                             <div>
                                 <div class="text-emerald-400 font-mono text-sm">BOPHELONG OLD AGE HOME</div>
-                                <div class="text-4xl font-bold">Resident Intelligence Dashboard</div>
+                                <h2 id="oldage-title" class="text-4xl font-bold">Resident Intelligence Dashboard</h2>
                             </div>
-                            <a href="https://bophelong-old-age-home.firebaseapp.com/" target="_blank" 
+                            <a href="https://bophelong-old-age-home.firebaseapp.com/" target="_blank" rel="noopener noreferrer"
                                class="px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-black font-semibold rounded-3xl flex items-center gap-3 transition">
                                 OPEN FULL SYSTEM <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
@@ -386,17 +414,17 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <!-- CHILDREN'S HOME SECTION -->
-                <div id="children" class="section">
+                <section id="children" class="section" aria-labelledby="children-title">
                     <div class="max-w-5xl mx-auto">
                         <div class="flex justify-between items-end mb-8">
                             <div>
                                 <div class="text-sky-400 font-mono text-sm">BOPHELONG CHILDREN'S HOME</div>
-                                <div class="text-4xl font-bold">Child Welfare Command Center</div>
+                                <h2 id="children-title" class="text-4xl font-bold">Child Welfare Command Center</h2>
                             </div>
-                            <a href="https://children-s-home-a0ce1.web.app/" target="_blank" 
+                            <a href="https://children-s-home-a0ce1.web.app/" target="_blank" rel="noopener noreferrer"
                                class="px-8 py-4 bg-sky-500 hover:bg-sky-600 text-black font-semibold rounded-3xl flex items-center gap-3 transition">
                                 OPEN FULL SYSTEM <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
@@ -424,17 +452,17 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <!-- HEALTHCARE ADMIN SECTION -->
-                <div id="health" class="section">
+                <section id="health" class="section" aria-labelledby="health-title">
                     <div class="max-w-5xl mx-auto">
                         <div class="flex justify-between items-end mb-8">
                             <div>
                                 <div class="text-rose-400 font-mono text-sm">BOPHELONG HEALTHCARE ADMIN</div>
-                                <div class="text-4xl font-bold">Patient &amp; Clinical Oversight</div>
+                                <h2 id="health-title" class="text-4xl font-bold">Patient &amp; Clinical Oversight</h2>
                             </div>
-                            <a href="https://plucky-hue-480011-h4.web.app/" target="_blank" 
+                            <a href="https://plucky-hue-480011-h4.web.app/" target="_blank" rel="noopener noreferrer"
                                class="px-8 py-4 bg-rose-500 hover:bg-rose-600 text-black font-semibold rounded-3xl flex items-center gap-3 transition">
                                 OPEN FULL SYSTEM <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
@@ -445,17 +473,17 @@
                             <p class="text-zinc-400 mt-2">Medication schedules synced in real-time across all wings</p>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <!-- SCHOOL SECTION -->
-                <div id="school" class="section">
+                <section id="school" class="section" aria-labelledby="school-title">
                     <div class="max-w-5xl mx-auto">
                         <div class="flex justify-between items-end mb-8">
                             <div>
                                 <div class="text-violet-400 font-mono text-sm">BIS SCHOOL MANAGEMENT SYSTEM</div>
-                                <div class="text-4xl font-bold">Academic &amp; Student Intelligence</div>
+                                <h2 id="school-title" class="text-4xl font-bold">Academic &amp; Student Intelligence</h2>
                             </div>
-                            <a href="https://bis-management-system-d77f4.web.app/" target="_blank" 
+                            <a href="https://bis-management-system-d77f4.web.app/" target="_blank" rel="noopener noreferrer"
                                class="px-8 py-4 bg-violet-500 hover:bg-violet-600 text-black font-semibold rounded-3xl flex items-center gap-3 transition">
                                 OPEN FULL SYSTEM <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
@@ -465,25 +493,25 @@
                             <div class="text-2xl text-zinc-400">Enrolled Students • Term 1 2026</div>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <!-- REPORTS SECTION -->
-                <div id="reports" class="section">
+                <section id="reports" class="section" aria-labelledby="reports-title">
                     <div class="max-w-4xl mx-auto text-center py-20">
-                        <div class="text-5xl font-bold mb-4">Advanced Analytics Engine</div>
+                        <h2 id="reports-title" class="text-5xl font-bold mb-4">Advanced Analytics Engine</h2>
                         <p class="text-zinc-400 max-w-md mx-auto">Export consolidated reports from all four facilities in one click. AI-powered trend forecasting included.</p>
                         <button onclick="alert('📊 Full consolidated PDF generated and downloaded (demo)')" 
                                 class="mt-12 px-12 py-6 bg-white text-zinc-950 rounded-3xl font-semibold text-xl hover:scale-105 transition">
                             GENERATE Q1 2026 EXECUTIVE REPORT
                         </button>
                     </div>
-                </div>
+                </section>
 
                 <!-- AI ADVISOR SECTION -->
-                <div id="ai" class="section">
+                <section id="ai" class="section" aria-labelledby="ai-title">
                     <div class="max-w-2xl mx-auto bg-zinc-900 rounded-3xl p-8">
                         <div class="text-yellow-400 font-mono mb-2">GROK-POWERED EXECUTIVE ADVISOR</div>
-                        <div class="text-4xl font-bold mb-8">What should I focus on today?</div>
+                        <h2 id="ai-title" class="text-4xl font-bold mb-8">What should I focus on today?</h2>
                         
                         <div class="space-y-6">
                             <div class="p-6 bg-zinc-800 rounded-3xl">
@@ -501,36 +529,78 @@
                             This AI insight is generated from live data across all four Bophelong systems.
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
 
             <!-- STATUS BAR -->
-            <div class="h-12 bg-zinc-900 border-t border-zinc-800 px-8 flex items-center text-xs font-mono text-zinc-500">
+            <footer class="h-12 bg-zinc-900 border-t border-zinc-800 px-8 flex items-center text-xs font-mono text-zinc-500">
                 <div class="flex-1 flex items-center gap-8">
                     <span>Last synced: <span class="text-emerald-400">moments ago</span></span>
                     <span>4 systems connected • 0 errors</span>
                 </div>
                 <div class="text-yellow-400">© 2026 Bophelong Care Network • Cutting-edge EIS v4.2.1</div>
-            </div>
-        </div>
+            </footer>
+        </main>
     </div>
 
     <script>
         // Tailwind script run
         function initializeTailwind() {
+            if (!window.tailwind) {
+                console.warn('Tailwind CDN is unavailable; rendering with fallback browser styles.');
+                return false;
+            }
             tailwind.config = {
                 content: [],
                 theme: {
                     extend: {}
                 }
             }
+            return true;
+        }
+
+        function getChartCanvas(id, fallbackMessage) {
+            const canvas = document.getElementById(id);
+            if (!canvas) return null;
+
+            const container = canvas.parentElement;
+            let fallback = container.querySelector(`[data-fallback-for="${id}"]`);
+
+            if (!window.Chart) {
+                canvas.style.display = 'none';
+                if (!fallback) {
+                    fallback = document.createElement('div');
+                    fallback.dataset.fallbackFor = id;
+                    fallback.className = 'chart-fallback';
+                    container.appendChild(fallback);
+                }
+                fallback.textContent = fallbackMessage;
+                return null;
+            }
+
+            if (fallback) fallback.remove();
+            canvas.style.display = '';
+            return canvas;
+        }
+
+        function updateActiveNavigation(section) {
+            document.querySelectorAll('[data-nav-section]').forEach(link => {
+                const isActive = link.dataset.navSection === section;
+                link.classList.toggle('active', isActive);
+                if (isActive) {
+                    link.setAttribute('aria-current', 'page');
+                } else {
+                    link.removeAttribute('aria-current');
+                }
+            });
         }
         
         // Chart configurations
         let mainChartInstance, donationChartInstance, oldAgePieInstance, childrenGenderInstance;
         
         function createMainChart() {
-            const ctx = document.getElementById('mainChart');
+            const ctx = getChartCanvas('mainChart', 'Performance charts will appear when Chart.js is available.');
+            if (!ctx) return;
             if (mainChartInstance) mainChartInstance.destroy();
             
             mainChartInstance = new Chart(ctx, {
@@ -567,7 +637,8 @@
         }
         
         function createDonationChart() {
-            const ctx = document.getElementById('donationChart');
+            const ctx = getChartCanvas('donationChart', 'Donation trends are unavailable until chart assets finish loading.');
+            if (!ctx) return;
             if (donationChartInstance) donationChartInstance.destroy();
             
             donationChartInstance = new Chart(ctx, {
@@ -590,7 +661,8 @@
         }
         
         function createOldAgePie() {
-            const ctx = document.getElementById('oldAgePie');
+            const ctx = getChartCanvas('oldAgePie', 'Resident demographics will appear when chart assets are available.');
+            if (!ctx) return;
             if (oldAgePieInstance) oldAgePieInstance.destroy();
             
             oldAgePieInstance = new Chart(ctx, {
@@ -612,7 +684,8 @@
         }
         
         function createChildrenGender() {
-            const ctx = document.getElementById('childrenGender');
+            const ctx = getChartCanvas('childrenGender', 'Child welfare distribution data is unavailable until chart assets load.');
+            if (!ctx) return;
             if (childrenGenderInstance) childrenGenderInstance.destroy();
             
             childrenGenderInstance = new Chart(ctx, {
@@ -636,6 +709,7 @@
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             const target = document.getElementById(section);
             if (target) target.classList.add('active');
+            updateActiveNavigation(section);
             
             // Refresh charts when switching to dashboard
             if (section === 'dashboard') {
@@ -654,6 +728,13 @@
         
         // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
+            const activator = e.target.closest('[data-section]');
+            if (activator && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                switchSection(activator.dataset.section);
+                return;
+            }
+
             if (e.metaKey && e.key === 'k') {
                 e.preventDefault();
                 alert("🔍 Global search activated (demo)");
@@ -663,6 +744,7 @@
         // Initialize everything
         window.onload = function() {
             initializeTailwind();
+            updateActiveNavigation('dashboard');
             
             // Initial charts
             createMainChart();
